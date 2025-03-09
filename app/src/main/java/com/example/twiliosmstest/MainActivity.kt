@@ -11,7 +11,9 @@ import com.example.twiliosmstest.ui.theme.TwilioSMSTestTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import com.example.twiliosmstest.navigation.AppNavGraph
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

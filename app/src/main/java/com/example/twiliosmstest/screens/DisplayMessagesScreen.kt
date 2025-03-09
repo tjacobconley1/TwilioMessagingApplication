@@ -24,9 +24,6 @@ import androidx.navigation.NavHostController
 import com.example.twiliosmstest.Utils
 import com.example.twiliosmstest.database.Message
 import com.example.twiliosmstest.viewmodels.DisplayMessagesScreenViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun DisplayMessagesScreen(
@@ -35,31 +32,33 @@ fun DisplayMessagesScreen(
     viewModel: DisplayMessagesScreenViewModel
 ) {
 
-    // val messages by viewModel.messages.collectAsState()
+    val messages by viewModel.messages.collectAsState(emptyList())
 
-//    if (messages.isEmpty()) {
-//        Text(
-//            text = "No messages available",
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .wrapContentSize(Alignment.Center)
-//        )
-//    } else {
-//        LazyColumn(
-//            modifier = modifier.fillMaxSize(),
-//            contentPadding = PaddingValues(16.dp)
-//        ) {
-//            items(messages) { message ->
-//                MessageItem(message = message)
-//            }
-//        }
-//    }
-    Spacer(modifier = Modifier.height(20.dp))
-    Button(
-        onClick = {
-            navController.popBackStack()
-        }){
-        Text("Go back to send sms screen")
+    Column(modifier = Modifier.fillMaxWidth()){
+        Spacer(modifier = Modifier.height(40.dp))
+        Button(
+            onClick = {
+                navController.popBackStack()
+            }) {
+            Text("Go back to send sms screen")
+        }
+        if (messages.isEmpty()) {
+            Text(
+                text = "No messages available",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+            )
+        } else {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(messages) { message ->
+                    MessageItem(message = message)
+                }
+            }
+        }
     }
 }
 
@@ -81,6 +80,8 @@ fun MessageItem(message: Message) {
             Text(text = message.content)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Timestamp: ${Utils.formatTimestamp(message.timestamp)}")
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Status: ${message.status}")
         }
     }
 }

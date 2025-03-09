@@ -17,9 +17,9 @@ abstract class MessagesDatabase: RoomDatabase() {
         fun getMessagesDatabase(context: Context): MessagesDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
+                    context,
                     MessagesDatabase::class.java,
-                    "user_database"
+                    "messages_database"
                 ).build()
                 INSTANCE = instance
                 instance

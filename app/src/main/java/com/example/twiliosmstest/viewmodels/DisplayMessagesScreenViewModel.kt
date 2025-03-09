@@ -1,36 +1,24 @@
 package com.example.twiliosmstest.viewmodels
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.example.twiliosmstest.database.Message
-//import com.example.twiliosmstest.database.MessagesDatabase
-//import com.example.twiliosmstest.database.MessagesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.twiliosmstest.database.Message
+import com.example.twiliosmstest.database.MessagesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-//class DisplayMessagesScreenViewModel(applicationContext: Context) : AndroidViewModel(applicationContext.applicationContext as Application) {
-class DisplayMessagesScreenViewModel: ViewModel() {
-    // private val repository: MessagesRepository
+@HiltViewModel
+class DisplayMessagesScreenViewModel @Inject constructor(private val repository: MessagesRepository): ViewModel() {
 
-    // val messages: StateFlow<List<Message>> = MutableStateFlow(emptyList())
+    private val _messages = repository.getAllMessages()
+    val messages: Flow<List<Message>> = _messages
 
+    fun insertMessage(message: Message) {
+        viewModelScope.launch {
+            repository.insertMessage(message)
+        }
 
-//    init {
-//        val dao = MessagesDatabase.getMessagesDatabase(applicationContext).messageDao()
-//        // repository = MessagesRepository(dao)
-//    }
-
-
-//    private fun getAllMessages() {
-//        viewModelScope.launch {
-//            repository.getAllMessages().collect { list ->
-//                (messages as MutableStateFlow).value = list
-//            }
-//        }
-//    }
-
+    }
 }
