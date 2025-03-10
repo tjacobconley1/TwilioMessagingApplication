@@ -33,6 +33,7 @@ fun DisplayMessagesScreen(
 ) {
 
     val messages by viewModel.messages.collectAsState(emptyList())
+    var sortedMessages = messages.sortedByDescending { it.timestamp }
 
     Column(modifier = Modifier.fillMaxWidth()){
         Spacer(modifier = Modifier.height(40.dp))
@@ -54,7 +55,7 @@ fun DisplayMessagesScreen(
                 modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(messages) { message ->
+                items(sortedMessages) { message ->
                     MessageItem(message = message)
                 }
             }
