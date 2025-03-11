@@ -1,12 +1,12 @@
-package com.example.twiliosmstest.database
+package com.example.twiliosmstest.database.messages
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Message::class], version = 1, exportSchema = false)
-abstract class MessagesDatabase: RoomDatabase() {
+@Database(entities = [Message::class], version = 2, exportSchema = false)
+abstract class MessagesDatabase : RoomDatabase() {
 
     abstract fun messageDao(): MessagesDao
 
@@ -20,7 +20,8 @@ abstract class MessagesDatabase: RoomDatabase() {
                     context,
                     MessagesDatabase::class.java,
                     "messages_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

@@ -1,7 +1,8 @@
-package com.example.twiliosmstest.database
+package com.example.twiliosmstest.database.messages
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.twiliosmstest.R
 
 @Entity(tableName = "messages")
 data class Message(
@@ -10,5 +11,6 @@ data class Message(
     val recipient: String = "",
     val content: String = "",
     val timestamp: Long = 0L,
-    val status: String = ""
+    val status: String = "",
+    val imageURI: String = R.drawable.ic_launcher_foreground.toString()
 )

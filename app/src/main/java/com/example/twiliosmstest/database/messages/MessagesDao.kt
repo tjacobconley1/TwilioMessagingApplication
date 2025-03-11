@@ -1,4 +1,4 @@
-package com.example.twiliosmstest.database
+package com.example.twiliosmstest.database.messages
 
 import androidx.room.Dao
 import androidx.room.Delete

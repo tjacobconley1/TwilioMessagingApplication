@@ -6,7 +6,7 @@ pluginManagement {
     }
     resolutionStrategy {
         eachPlugin {
-            if( requested.id.id.startsWith("com.google.dagger")){
+            if (requested.id.id.startsWith("com.google.dagger")) {
                 useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
             }
         }

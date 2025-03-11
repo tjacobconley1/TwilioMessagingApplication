@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android") version "2.48.1" apply true
     kotlin("kapt")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
@@ -12,8 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.twiliosmstest"
-        minSdk = 24
-        //noinspection OldTargetApi
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -61,6 +61,7 @@ dependencies {
     // Room
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    kapt(libs.roomCompiler)
 
     // Navigation
     implementation(libs.androidx.navigation)
@@ -76,6 +77,4 @@ dependencies {
     // Hilt
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
-    kapt(libs.roomCompiler)
-
 }

@@ -1,8 +1,13 @@
-package com.example.twiliosmstest.database
+package com.example.twiliosmstest.database.messages
 
 import kotlinx.coroutines.flow.Flow
 
 class MessagesRepository(private val dao: MessagesDao) {
+
+    // get image message image URI
+    suspend fun getMessageImageUri(messageId: Int): String? {
+        return dao.getMessageById(messageId)?.imageURI
+    }
 
     // Insert a message
     suspend fun insertMessage(message: Message) {

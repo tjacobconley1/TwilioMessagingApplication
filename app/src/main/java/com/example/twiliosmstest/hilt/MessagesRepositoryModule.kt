@@ -1,7 +1,7 @@
 package com.example.twiliosmstest.hilt
 
-import com.example.twiliosmstest.database.MessagesDao
-import com.example.twiliosmstest.database.MessagesRepository
+import com.example.twiliosmstest.database.messages.MessagesDao
+import com.example.twiliosmstest.database.messages.MessagesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

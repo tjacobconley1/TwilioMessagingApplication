@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     id("com.google.dagger.hilt.android") version "2.48.1" apply false
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
 }
 
 dependencies {

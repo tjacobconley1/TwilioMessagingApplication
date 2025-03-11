@@ -1,8 +1,8 @@
 package com.example.twiliosmstest.hilt
 
 import android.content.Context
-import com.example.twiliosmstest.database.MessagesDao
-import com.example.twiliosmstest.database.MessagesDatabase
+import com.example.twiliosmstest.database.messages.MessagesDao
+import com.example.twiliosmstest.database.messages.MessagesDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
