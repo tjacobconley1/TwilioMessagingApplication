@@ -2,9 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.dagger.hilt.android") version "2.48.1" apply true
+    // alias(libs.plugins.react.native.gradle.plugin
+    // id("com.facebook.react")
     kotlin("kapt")
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -77,4 +79,13 @@ dependencies {
     // Hilt
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
+
+    // REACT
+    // implementation(libs.react.native)
+    // implementation(libs.react.native.gradle.plugin)
+
+//    implementation(libs.react.android)
+//    implementation(libs.hermes.android)
+//    implementation(libs.facebook.react.android)
+//    implementation(libs.react.hermes.android)
 }
