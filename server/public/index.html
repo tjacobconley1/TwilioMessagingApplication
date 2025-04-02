@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Send SMS</title>
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #f5f5f5;
+          padding: 2rem;
+        }
+
+        .container {
+          max-width: 500px;
+          margin: auto;
+          background: white;
+          border-radius: 16px;
+          padding: 2rem;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        label {
+          font-weight: bold;
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+
+        input, textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 1rem;
+        }
+
+        button {
+          width: 100%;
+          padding: 0.75rem;
+          border: none;
+          background-color: #4caf50;
+          color: white;
+          font-size: 1rem;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+          background-color: #45a049;
+        }
+
+        .status-success {
+          color: green;
+          font-family: monospace;
+        }
+
+        .status-error {
+          color: red;
+          font-family: monospace;
+        }
+
+        .attachment {
+          text-align: right;
+          margin-top: 1rem;
+        }
+
+        .attachment img {
+          width: 24px;
+          cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Send SMS</h2>
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" placeholder="+1234567890" />
+
+    <label for="message">Message</label>
+    <textarea id="message" rows="8" placeholder="Type your message here..."></textarea>
+
+    <div id="statusMessage" class=""></div>
+
+    <button onclick="sendSms()">Send SMS</button>
+
+    <div class="attachment">
+        <img src="logo.webp" alt="Attach" title="Attach something (not implemented)">
+    </div>
+</div>
+
+<script>
+
+  function sendSms() {
+    const phone = document.getElementById('phone').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const statusDiv = document.getElementById('statusMessage');
+
+    if (!phone || !message) {
+      statusDiv.textContent = "Phone number and message are required.";
+      statusDiv.className = "status-error";
+      return;
+    }
+
+    statusDiv.textContent = "Sending...";
+    statusDiv.className = "";
+
+    fetch('/send_sms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ to: phone, body: message })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        statusDiv.textContent = "SMS Sent Successfully ✅";
+        statusDiv.className = "status-success";
+        loadMessages();
+      } else {
+        throw new Error(data.message || "Unknown error");
+      }
+    })
+    .catch(err => {
+      statusDiv.textContent = `Error: ${err.message}`;
+      statusDiv.className = "status-error";
+    });
+
+    // Clear inputs after sending
+    document.getElementById('phone').value = "";
+    document.getElementById('message').value = "";
+  }
+
+  function loadMessages() {
+  fetch('/messages')
+    .then(res => res.json())
+    .then(data => {
+      const logDiv = document.getElementById('messageLog');
+      if (data.status === 'success') {
+        if (data.data.length === 0) {
+          logDiv.innerHTML = '<p>No messages sent yet.</p>';
+          return;
+        }
+
+        const rows = data.data.map(msg => `
+          <div style="padding: 0.75rem; border-bottom: 1px solid #ddd;">
+            <strong>To:</strong> ${msg.to} <br/>
+            <strong>Message:</strong> ${msg.body} <br/>
+            <strong>Status:</strong> ${msg.status} <br/>
+            <small><em>${new Date(msg.sent_at).toLocaleString()}</em></small>
+          </div>
+        `).join('');
+
+        logDiv.innerHTML = rows;
+      } else {
+        logDiv.innerHTML = '<p style="color:red;">Failed to load messages.</p>';
+      }
+    })
+    .catch(err => {
+      console.error('Message log error:', err);
+      document.getElementById('messageLog').innerHTML = '<p style="color:red;">Error loading messages.</p>';
+    });
+}
+
+    window.addEventListener('DOMContentLoaded', loadMessages);
+
+</script>
+
+<h3>Sent Messages</h3>
+<div id="messageLog" style="margin-top: 1rem;"></div>
+
+
+</body>
+</html>

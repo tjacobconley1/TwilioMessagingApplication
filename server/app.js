@@ -2,16 +2,19 @@ const express = require('express');
 const twilio = require('twilio');
 const bodyParser = require('body-parser');
 const app = express();
+
 const port = 3000;
 
 // Twilio credentials
-//const accountSid = 'YOUR_ACCOUNT_SID'; // Your Account SID
-//const authToken = 'YOUR_AUTH_TOKEN'; // Your Auth Token
-const accountSid = 'AC5e990a3c1a51ba0f1ae4480c4620c299'; // Your Account SID
-const authToken = 'b3ae15b4b87573d044e833b7eb1163fa'; // Your Auth Token
+const accountSid = 'YOUR_ACCOUNT_SID'; // Your Account SID
+const authToken = 'YOUR_AUTH_TOKEN'; // Your Auth Token
 const client = twilio(accountSid, authToken);
+const db = require('./db');
+
 
 app.use(bodyParser.json());
+
+app.use(express.static('public'));
 
 // To send SMS
 app.post('/send_sms', (req, res) => {
@@ -23,8 +26,30 @@ app.post('/send_sms', (req, res) => {
       from: '+18885551234', // Your Twilio phone number
       to: to
     })
-    .then((message) => res.json({ status: 'success', sid: message.sid }))
-    .catch((error) => res.json({ status: 'error', message: error.message }));
+    .then((message) => {
+          // Store in DB
+          db.run(`
+            INSERT INTO messages ("to", body, sid, status)
+            VALUES (?, ?, ?, ?)
+          `, [to, body, message.sid, 'success'], (err) => {
+            if (err) console.error('DB insert error:', err.message);
+          });
+
+          res.json({ status: 'success', sid: message.sid })
+
+    })
+    .catch((error) => {
+
+        // Optional: log errors too
+        db.run(`
+            INSERT INTO messages ("to", body, sid, status)
+            VALUES (?, ?, ?, ?)
+            `, [to, body, null, 'error: ' + error.message], (err) => {
+            if (err) console.error('DB insert error:', err.message);
+        });
+        res.json({ status: 'error', message: error.message })
+
+    });
 });
 
 app.post("/log", (req, res) => {
@@ -33,9 +58,22 @@ app.post("/log", (req, res) => {
   res.json({ logId: 'log_' + Date.now() }); // Just a dummy response
 });
 
-app.post("/authenticate", (req, res) => {
-    const { username, password } = req.body;
-})
+// Get all messages from the DB
+app.get('/messages', (req, res) => {
+  db.all('SELECT * FROM messages ORDER BY sent_at DESC', [], (err, rows) => {
+    if (err) {
+      console.error('DB read error:', err.message);
+      res.status(500).json({ status: 'error', message: err.message });
+    } else {
+      res.json({ status: 'success', data: rows });
+    }
+  });
+});
+
+
+//app.post("/authenticate", (req, res) => {
+//    const { username, password } = req.body;
+//})
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

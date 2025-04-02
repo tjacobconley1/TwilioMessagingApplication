@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twiliosmstest.database.messages.Message
 import com.example.twiliosmstest.database.messages.MessagesRepository
+import com.example.twiliosmstest.network.LogRequest
 import com.example.twiliosmstest.network.RetrofitClient
 import com.example.twiliosmstest.network.SmsRequest
 import com.example.twiliosmstest.screens.SendSmsScreenState
@@ -34,6 +35,12 @@ class SendSmsScreenViewModel @Inject constructor(private val repository: Message
             try {
                 val response = RetrofitClient.apiService.sendSms(
                     SmsRequest(phoneNumber, message)
+                )
+                RetrofitClient.apiService.logToServer(
+                    LogRequest(
+                        "SMS SENDING",
+                        "To: [$phoneNumber], Message: $message"
+                    )
                 )
                 if (response.isSuccessful) {
                     onResult("SMS Sent Successfully")

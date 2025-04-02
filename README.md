@@ -6,6 +6,9 @@
 ## To run react native module open the terminal and type
 cd "/Users/{YOUR_USERNAME}/AndroidStudioProjects/TwilioSMSTest/react_native_module" && npx react-native run-android
 
+## Enter your Twilio credentials to the server/app.js file
+server/app.js:9
+
 ## Developer
 Created By: Tyler Conley 
 Email: Tylerjacobconley1@gmail.com
